@@ -11,9 +11,31 @@
     
 # [1] 
 import pandas as pd
-df = pd.read_csv('./Practice5/student_dataset_10000_rows.csv')
+df = pd.read_csv('day04/Practice5/student_dataset_10000_rows.csv')
 # 범주형(기준으로 나누어진 자료들) 수치형 (연속된 수)
 # 독립변수(특성) : study_hours,attendance,sleep_hours,internet_usage,assignments_completed,previous_score,exam_score
 # 종속변수(타깃) : exam_score
 student_full = df[['study_hours', 'attendance', 'sleep_hours', 'internet_usage', 'assignments_completed', 'previous_score']]
 student_target = df['exam_score'].values
+
+# 
+from sklearn.model_selection import train_test_split
+train_input, test_input, train_target, test_target = train_test_split(student_full, student_target, test_size=0.2, random_state=42)
+
+# [2] 모델 전수 탐색
+# 다항 확장 : 특성(자료)들 간에 직선 관계 드물다. (단순회귀), 물고기길이, 물고기길이 제곱, 물고기길이 세제곱 ~ (다항 회귀)
+# 직선 관계가 아닌 곡선 관계을 만들고 다양한 경우의 수의 학습 자료 만든다. 주의할 점 : 과적합
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+for degree in [1, 2, 3, 4, 5] : 
+    poly = PolynomialFeatures(degree=degree, include_bias=False) # defree = 차수
+    poly.fit(train_input)
+    train_poly = poly.transform(train_input)
+    test_poly = poly.transform(test_input)
+    print(f'{degree} 차수의 특성 수')
+    print(train_poly.shape)
+    # 선형 회귀
+    lr = LinearRegression()
+    lr.fit(train_poly, train_target)
+    r2 = lr.score(test_poly, test_target)
+    print(f'{degree} 차수의 선형 회귀 결정개수 : {r2}')
