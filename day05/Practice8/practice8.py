@@ -14,14 +14,39 @@ x = df[['study_hours', 'attendance', 'sleep_hours', 'internet_usage', 'assignmen
 train_input, test_input, train_target, test_target = train_test_split(x, y, test_size=0.2, random_state=42)
 
 # [2] 특성 다항 확장 및 경사하강법 필수 스케일링
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+poly = PolynomialFeatures(degree=2, include_bias=False)
+poly.fit(train_input)
+train_poly = poly.transform(train_input)
+test_poly = poly.transform(test_input)
 
+ss = StandardScaler()
+ss.fit(train_poly)
+train_scaled = ss.transform(train_poly)
+test_scaled = ss.transform(test_poly)
 
 # [3] 로그손실 또는 힌지손실 기반의 규제 하이퍼파라미터
+from sklearn.linear_model import SGDClassifier
+sc = SGDClassifier(loss='log_loss', max_iter=100, alpha=0.001, random_state=42)
+
 
 # [4] 최고 정확도(Score) 선정 , *0.90 이상 찾기* 
+sc.fit(train_scaled, train_target)
+print(sc.score(train_scaled, train_target))
+print(sc.score(test_scaled, test_target))
+
 
 # [5] 신규 학생 데이터 취업 예측 (추론 함수 구현 및 검증)
 
 # 구현된 모델에 아래 두 가지 샘플 데이터를 입력하여  취업 성공(Placed)과 실패(Not Placed)를 올바르게 분류해내는지 최종 검증하시오.
 #  - 샘플 A : study_hours=9, attendance=95, sleep_hours=7, internet_usage=2, assignments_completed=18, previous_score=85
 #  - 샘플 B : study_hours=2, attendance=60, sleep_hours=5, internet_usage=9, assignments_completed=4, previous_score=50
+samples = [
+        [9, 95, 7, 2, 18, 85], # 샘플 A
+        [2, 60, 5, 9, 4, 50]   # 샘플 B
+        ]
+samples_poly = poly.transform(samples)
+samples_scaled = ss.transform(samples_poly)
+a = sc.predict(samples_scaled)
+print(a[0])
+print(a[1])
