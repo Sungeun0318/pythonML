@@ -66,4 +66,25 @@ import matplotlib.pyplot as plt
 plt.plot(train_score) # 학습용 정확도 점수
 plt.plot(test_score)  # 테스트용 정확도 점수
 plt.show()
+
+# [5] hinge / SVM(서포트 벡터 머신)
+sc = SGDClassifier(loss = 'hinge', max_iter=100, random_state=42, alpha=0.001)
+sc.fit(train_scaled, train_target)
+
+print(sc.score(train_scaled, train_target)) # 0.7567567567567568
+print(sc.score(test_scaled, test_target)) # 0.8333333333333334
+
+# 로지스틱 회귀 : 확률 이용한 분류 ('log_loss')
+# SGD(확률 경사하강법 / 미니배치) : loss = 'log_loss' vs loss = 'hinge'
+# 경사하강법 : 손실(예측과 정답 오차) 0가깝게 처리 위한 반복 계산( *딥러닝)
+
+# loss = 'log_loss'
+    # 도미일 확률이 51%일 때 기울기(가중치) 절편으로 수 없이 조정하여 확률 100% 만드는 방법 (경사 하강법)
+# loss = 'hinge'
+    # 전체데이터가 아닌 도미 확률이 50%, 0인 지점인 애매/아슬한(경계선) 자료만 가지고 확률 조정하는 방법
+
+
+
+
+
     
