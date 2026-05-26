@@ -55,6 +55,15 @@ et.fit(train_input, train_target)
 print(et.feature_importances_) # [0.20702369 0.51313261 0.2798437 ]
 
 # [4] 그레이디언트 부스팅
+# 랜덤포레스트 : 중복허용한 무작위 샘플/특성 선정 학습
+# 엑스트라트리 : 무작위로 (허술한/계산식없이) 노드분할 기준 선정 학습 
+# 그레이디언트 부스팅 : 부모노드(트리)가 예측하고 오차를 자식노드(트리)에게 넘겨 학습
+    # 자식노드가 많아질수록 오차는 줄어든다. (과대적합 주의)
+    
+# 예시] Tree(노드1)에서 실제 정답이 10을 목표로 하여 예측한 결과가 7이면 오차는 3발생
+# 예시] Tree(노드2)는 이 '오차 3'을 줄이는 방향으로 학습하여, 기존 예측값(7)에 보정값(1)을 더해 8을 만듦 (오차는 2로 감소)
+# ~~~ 반복하여 오차는 0에 가깝게 도달 하는 방법 
+    
 from sklearn.ensemble import GradientBoostingClassifier
 gb = GradientBoostingClassifier(random_state=42) # 모델 객체 생성
 scores = cross_validate(gb, train_input, train_target, n_jobs= -1)
@@ -64,5 +73,6 @@ print(np.mean(scores['test_score'])) # 0.8715107671247301
 
 # 특성 중요도
 gb.fit(train_input, train_target)
-print(gb.feature_importances_) # [0.12517641 0.73300095 0.14182264] # rf(랜덤포레스트)/et(엑스트라트리) 보다 뾰족하게 한쪽 특성에 집중된 결과 
+print(gb.feature_importances_) # [0.12517641 0.73300095 0.14182264] 
+# dt(결정트리)/rf(랜덤포레스트)/et(엑스트라트리) 보다 뾰족하게 한쪽 특성에 집중된 결과 
 
