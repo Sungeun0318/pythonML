@@ -22,7 +22,10 @@ print(dt.predict(test_input[: 5])) # 모델 예측(5개만) # [1. 0. 1. 1. 1.]
 # [3] 결정 트리 시각화 
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
-plot_tree(dt, max_depth=1, feature_names = ['alcohol', 'sugar', 'pH']) # plot_tree(트리모델, max_depth = 뿌리 개수)
+
+# max_depth = 가지수, 트리의 최대 깊이, 최대적합 억제 # 가지수가 너무 많아지면 과대적합 발생
+# filled=True
+plot_tree(dt, max_depth=3, feature_names = ['alcohol', 'sugar', 'pH'], class_names=['Red Wine', 'White Wine'], filled=True) # plot_tree(트리모델, max_depth = 뿌리 개수)
 plt.show()
 # 트리 : 전체적인 구조 그자체,
 # 노드 : 사각형 상자 하나하나 의미, 가장 위에 있는 노드를 루트(root) 노트
@@ -32,4 +35,15 @@ plt.show()
         # 0으로 가까울수록 순수(특정 예측값으로 모여)하다
         # 0.5에 가까울수록 혼란(예측값이 섞여)하다.
         # sugar =  특성 # sugar <= 0.45 보다 작으면 true(왼쪽노드로 이동), false(오른쪽노드로 이동)
+        
+# [4] 특성 중요도
+# 각 특성이 트리 모델에 얼마나 중요한 역할 하는지 수치 # 합은 1
+print(dt.feature_importances_) # [0.23656455 0.51860098 0.24483448]
+print(dt.feature_importances_[0]) # alcohol # sugar # pH
+
+# [5] 최소한의 불순도(gini) 설정, 최적의 파라미터
+dt = DecisionTreeClassifier(random_state = 42, min_impurity_decrease = 0.0005)
+dt.fit(train_input, train_target) 
+print(dt.score(train_input, train_target)) # 0.8975779967159278
+print(dt.score(test_input, test_target)) # 0.8590769230769231 # 과대적합 최소화
     
