@@ -74,7 +74,7 @@ sc.fit(train_scaled, train_target)
 print(sc.score(train_scaled, train_target)) # 0.7567567567567568
 print(sc.score(test_scaled, test_target)) # 0.8333333333333334
 
-# 로지스틱 회귀 : 확률 이용한 분류 ('log_loss')
+# 로지스틱 회귀 : 확률 이용한 분류 ('log_loss') 
 # SGD(확률 경사하강법 / 미니배치) : loss = 'log_loss' vs loss = 'hinge'
 # 경사하강법 : 손실(예측과 정답 오차) 0가깝게 처리 위한 반복 계산( *딥러닝)
 
